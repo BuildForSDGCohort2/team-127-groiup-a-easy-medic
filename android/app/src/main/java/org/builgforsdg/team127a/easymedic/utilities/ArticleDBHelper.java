@@ -15,17 +15,17 @@ import java.util.List;
 public class ArticleDBHelper {
 
     // Articles Table Column names
-    public static final String KEY_ID = "_id";
-    public static final String KEY_DESCRIPTION = "description";
-    public static final String KEY_CATEGORY = "category";
-    public static final String KEY_AUTHOR = "author";
-    public static final String KEY_BODY = "body";
-    public static final String KEY_PATH = "path";
-    public static final String KEY_DATETIME = "dateTime";
-    public static final String KEY_TYPE = "type";
-    public static final String KEY_DAY = "day";
-    public static final String KEY_MONTH = "month";
-    public static final String KEY_YEAR = "year";
+    private static final String KEY_ID = "_id";
+    private static final String KEY_DESCRIPTION = "description";
+    private static final String KEY_CATEGORY = "category";
+    private static final String KEY_AUTHOR = "author";
+    private static final String KEY_BODY = "body";
+    private static final String KEY_PATH = "path";
+    private static final String KEY_DATETIME = "dateTime";
+    private static final String KEY_TYPE = "type";
+    private static final String KEY_DAY = "day";
+    private static final String KEY_MONTH = "month";
+    private static final String KEY_YEAR = "year";
 
     private static final String TAG = "DBHELPER";
     private DatabaseHelper mDbHelper;
@@ -187,7 +187,7 @@ public class ArticleDBHelper {
             // Select All Query
 
             String selectQuery = "Select * FROM " + TABLE_ARTICLES + " WHERE " + TABLE_ARTICLES +
-                    " MATCH \"" + phrase + "\"";
+                    " MATCH  '"+ KEY_BODY + ":" + phrase + "'";
 
             SQLiteDatabase db = this.getWritableDatabase();
             Cursor cursor = db.rawQuery(selectQuery, null);
@@ -244,193 +244,11 @@ public class ArticleDBHelper {
             return p;
         }
 
-        public int getTodayReport(String currentday) {
-            Cursor cursor;
-            int theSum;
-            System.out.println("currentday is : " + currentday);
-//                 String query = "Select SUM (replace(substr(Body,2),\",\",\"\")) FROM " + TABLE_ARTICLES;
-
-            String query = "Select SUM (replace(substr(Body,2),\",\",\"\")) FROM " + TABLE_ARTICLES + " WHERE " + KEY_MONTH +
-                    " BETWEEN datetime('now', 'start of day') AND datetime('now', 'localtime')";
-//                         "  BETWEEN JulianDay('now') AND JulianDay('now','+1 day','-0.001 second')";
-            System.out.println("query is : " + query);
-            SQLiteDatabase db = this.getWritableDatabase();
-            cursor = db.rawQuery(query, null);
-            if (cursor.moveToFirst())
-                theSum = cursor.getInt(0);
-            else
-                theSum = -1;
-            System.out.println("theSum is : " + theSum);
-            cursor.close();
-            return theSum;
-        }
-
-        public int getThismonthReport(String currentday) {
-            Cursor cursor;
-            int theSum;
-            System.out.println("currentday is : " + currentday);
-//                String query = "Select SUM(Body) FROM " + TABLE_ARTICLES + " WHERE " + KEY_DAY +
-//                         " LIKE \"" + currentday + "%\"";
-            String query = "Select SUM (replace(substr(Body,2),\",\",\"\")) FROM " + TABLE_ARTICLES + " WHERE " + KEY_MONTH +
-                    "  BETWEEN datetime('now', 'start of month') AND datetime('now', 'localtime')";
-            System.out.println("query is : " + query);
-            SQLiteDatabase db = this.getWritableDatabase();
-            cursor = db.rawQuery(query, null);
-            if (cursor.moveToFirst())
-                theSum = cursor.getInt(0);
-            else
-                theSum = -1;
-            System.out.println("theSum is : " + theSum);
-            cursor.close();
-            return theSum;
-        }
-
-        public int getThisweekReport(String currentday) {
-            Cursor cursor;
-            int theSum;
-            System.out.println("currentday is : " + currentday);
-//                String query = "Select SUM(Body) FROM " + TABLE_ARTICLES + " WHERE " + KEY_DAY +
-//                         " LIKE \"" + currentday + "%\"";
-            String query = "Select SUM (replace(substr(Body,2),\",\",\"\")) FROM " + TABLE_ARTICLES + " WHERE " + KEY_MONTH +
-                    "  BETWEEN datetime('now','-7 days') AND datetime('now', 'localtime') ";
-            System.out.println("query is : " + query);
-            SQLiteDatabase db = this.getWritableDatabase();
-            cursor = db.rawQuery(query, null);
-            if (cursor.moveToFirst())
-                theSum = cursor.getInt(0);
-            else
-                theSum = -1;
-            System.out.println("theSum is : " + theSum);
-            cursor.close();
-            return theSum;
-        }
-
-        public int getLastweekReport(String currentday) {
-            Cursor cursor;
-            int theSum;
-            System.out.println("currentday is : " + currentday);
-//                String query = "Select SUM(Body) FROM " + TABLE_ARTICLES + " WHERE " + KEY_DAY +
-//                         " LIKE \"" + currentday + "%\"";
-            String query = "Select SUM (replace(substr(Body,2),\",\",\"\")) FROM " + TABLE_ARTICLES + " WHERE " + KEY_MONTH +
-                    "  BETWEEN datetime('now','-14 days')AND datetime('now', '-7 days') ";
-            System.out.println("query is : " + query);
-            SQLiteDatabase db = this.getWritableDatabase();
-            cursor = db.rawQuery(query, null);
-            if (cursor.moveToFirst())
-                theSum = cursor.getInt(0);
-            else
-                theSum = -1;
-            System.out.println("theSum is : " + theSum);
-            cursor.close();
-            return theSum;
-        }
-
-        public int getYesterdayReport(String yesterday) {
-            Cursor cursor;
-            int theSum;
-            System.out.println("yestrd was : " + yesterday);
-            String query = "Select SUM (replace(substr(Body,2),\",\",\"\")) FROM " + TABLE_ARTICLES + " WHERE " + KEY_MONTH +
-                    " LIKE \"" + yesterday + "%\"";
-//                String query = "Select SUM(Body) FROM " + TABLE_ARTICLES + " WHERE " + KEY_MONTH +
-//                        "  BETWEEN JulianDay('now') AND JulianDay('now','+1 day','-0.001 second')";
-            System.out.println("query is : " + query);
-            SQLiteDatabase db = this.getWritableDatabase();
-            cursor = db.rawQuery(query, null);
-            if (cursor.moveToFirst())
-                theSum = cursor.getInt(0);
-            else
-                theSum = -1;
-            System.out.println("theSum is : " + theSum);
-            cursor.close();
-            return theSum;
-        }
-
-        public int getLastmonthReport(String currentday) {
-            Cursor cursor;
-            int theSum;
-            System.out.println("currentday is : " + currentday);
-//                String query = "Select SUM(Body) FROM " + TABLE_ARTICLES + " WHERE " + KEY_MONTH +
-//                         " = \"DEC\"";
-            String query = "Select SUM (replace(substr(Body,2),\",\",\"\")) FROM " + TABLE_ARTICLES + " WHERE " + KEY_DAY +
-                    "  BETWEEN datetime('now','-30 days') AND datetime('now', 'localtime') ";
-            System.out.println("query is : " + query);
-            SQLiteDatabase db = this.getWritableDatabase();
-            cursor = db.rawQuery(query, null);
-            if (cursor.moveToFirst())
-                theSum = cursor.getInt(0);
-            else
-                theSum = -1;
-            System.out.println("theSum is : " + theSum);
-            cursor.close();
-            return theSum;
-        }
-
-        /**
-         * This function delete's a Article in TABLE_ARTICLES based on the ID of the Article retrieved
-         * by it's Article name.
-         *
-         * @return True if deleted false otherwise.
-         */
-        public boolean specialdeleteArticle() {
-            boolean result = false;
-            String q = "SELECT * FROM " + TABLE_ARTICLES + " WHERE " + KEY_ID
-                    + " =106";
-            SQLiteDatabase db = this.getWritableDatabase();
-            Cursor cursor = db.rawQuery(q, null);
-            Article p = new Article();
-            if (cursor.moveToFirst()) {
-                cursor.moveToFirst();
-                p.setId(Integer.parseInt(cursor.getString(0)));
-                db.delete(TABLE_ARTICLES, KEY_ID + " = ?",
-                        new String[]{String.valueOf(p.getId())});
-                cursor.close();
-                result = true;
-            }
-            db.close();
-            return result;
-        }
 
 
-        public boolean deleteArticle(String Articlename) {
-            boolean result = false;
-            String q = "SELECT * FROM " + TABLE_ARTICLES + " WHERE " + KEY_DESCRIPTION
-                    + " = \"" + Articlename + "\"";
-            SQLiteDatabase db = this.getWritableDatabase();
-            Cursor cursor = db.rawQuery(q, null);
-            Article p = new Article();
-            if (cursor.moveToFirst()) {
-                cursor.moveToFirst();
-                p.setId(Integer.parseInt(cursor.getString(0)));
-                db.delete(TABLE_ARTICLES, KEY_ID + " = ?",
-                        new String[]{String.valueOf(p.getId())});
-                cursor.close();
-                result = true;
-            }
-            db.close();
-            return result;
-        }
 
-        /**
-         * Updates the Article passed to this function.
-         *
-         * @param p The Article to update
-         * @return True if updated, false otherwise.
-         */
-        public boolean updateArticle(Article p) {
-            boolean result = false;
-            String q = "SELECT * FROM " + TABLE_ARTICLES + " WHERE " + KEY_DESCRIPTION + " = " + p.getDescription();
-            SQLiteDatabase db = this.getWritableDatabase();
-            Cursor c = db.rawQuery(q, null);
-            if (c.moveToFirst()) {
-                String q2 = "UPDATE " + TABLE_ARTICLES + " SET " + KEY_DESCRIPTION + " = \""
-                        + p.getDescription() + "\", " + KEY_BODY + " = " + p.getBody()
-                        + " WHERE " + KEY_DESCRIPTION + " = " + p.getDescription();
-                db.execSQL(q2);
-                result = true;
-            }
-            db.close();
-            return result;
-        }
+
+
 
         // Getting All Articles as a list
         //might not be acurate as type is not yet added
@@ -476,34 +294,7 @@ public class ArticleDBHelper {
             return cursor.getCount();
         }
 
-        // Updating a Article
-        public int updateArticleWithoutCursor(Article article) {
-            SQLiteDatabase db = this.getWritableDatabase();
 
-            ContentValues values = new ContentValues();
-            values.put(KEY_DESCRIPTION, article.getDescription());
-            values.put(KEY_CATEGORY, article.getCategory());
-            values.put(KEY_AUTHOR, article.getAuthor());
-            values.put(KEY_BODY, article.getBody());
-            values.put(KEY_DATETIME, article.getDateTime());
-            values.put(KEY_TYPE, article.getType()); //
-            values.put(KEY_DAY, article.getDay());
-            values.put(KEY_MONTH, article.getMonth());
-            values.put(KEY_YEAR, article.getYear());
-
-// updating row
-            //return db.update(TABLE_ARTICLES, values, KEY_ID + " = ?",
-            //         new String[]{String.valueOf(Article.getid())});
-            return 1;
-        }
-        // Deleting a Article
- /*   public void deleteArticle(Article Article) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_ARTICLES, KEY_ID + " = ?",
-               // new String[]{String.valueOf(Article.getid())});
-       // db.close();
-
-    }*/
 
     }
 
